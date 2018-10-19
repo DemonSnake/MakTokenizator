@@ -50,14 +50,17 @@ class Test(unittest.TestCase):
         self.assertEqual(result[2].string, 'string')
         self.assertEqual(result[2].position, 22)
 
-    #unittests for gentokenize method        
+
+    #unittests for gentokenize method
     def test_gen_type_number(self):
         with self.assertRaises(ValueError):
-            self.Tokenizator.gentokenize(13)
+            result = self.Tokenizator.gentokenize(13)
+            next(result)
             
     def test_gen_type_notlist(self):
         with self.assertRaises(ValueError):
-            self.Tokenizator.gentokenize([15, 'abc', 'stream'])
+            result = self.Tokenizator.gentokenize([15, 'abc', 'stream'])
+            next(result)
 
     def test_gen_result_both_alpha(self):
         result = self.Tokenizator.gentokenize('test !!!111some ,.,. string')
@@ -94,7 +97,50 @@ class Test(unittest.TestCase):
         self.assertEqual(resultlist[0].position, 1)
         self.assertEqual(resultlist[2].string, 'string')
         self.assertEqual(resultlist[2].position, 22)
+        
+    #unittests for genclasstokenize method
+    def test_gen_class_type_number(self):
+        with self.assertRaises(ValueError):
+            result = self.Tokenizator.genclasstokenize(13)
+            next(result)
+            
+    def test_gen_class_type_notlist(self):
+        with self.assertRaises(ValueError):
+            result = self.Tokenizator.genclasstokenize([15, 'abc', 'stream'])
+            next(result)
 
+    def test_gen_class_result_one(self):
+        result = self.Tokenizator.genclasstokenize('some string')
+        resultlist = list(result)
+        self.assertEqual(len(resultlist), 3)
+        self.assertEqual(resultlist[0].string, 'some')
+        self.assertEqual(resultlist[0].position, 0)
+        self.assertEqual(resultlist[0].category, "alpha")
+        self.assertEqual(resultlist[1].string, ' ')
+        self.assertEqual(resultlist[1].position, 4)
+        self.assertEqual(resultlist[1].category, "space")        
+        self.assertEqual(resultlist[2].string, 'string')
+        self.assertEqual(resultlist[2].position, 5)
+        self.assertEqual(resultlist[2].category, "alpha")
+
+    def test_gen_class_result_two(self):
+        result = self.Tokenizator.genclasstokenize('!!some bloody string 123**')
+        resultlist = list(result)
+        self.assertEqual(len(resultlist), 9)
+        self.assertEqual(resultlist[0].string, '!!')
+        self.assertEqual(resultlist[0].position, 0)
+        self.assertEqual(resultlist[0].category, "punct")
+        self.assertEqual(resultlist[7].string, '123')
+        self.assertEqual(resultlist[7].position, 21)
+        self.assertEqual(resultlist[7].category, "digit")
+        
+    def test_gen_class_result_three(self):
+        result = self.Tokenizator.genclasstokenize('test™test* *test')
+        resultlist = list(result)
+        self.assertEqual(len(resultlist), 7)
+        self.assertEqual(resultlist[1].string, '™')
+        self.assertEqual(resultlist[1].position, 4)
+        self.assertEqual(resultlist[1].category, "other")
 
 if __name__ == '__main__':
     unittest.main()
