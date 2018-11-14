@@ -1,25 +1,29 @@
 import unittest
-from tokenizator import Tokenizator
+from tokenizer import Tokenizer
 
 class Test(unittest.TestCase):
     def setUp(self):
-        self.Tokenizator = Tokenizator()
+        self.Tokenizer = Tokenizer()
 
-    #unittests for tokenize method
+    # unittests for tokenize method
     def test_list_type_output(self):
-        result = self.Tokenizator.tokenize('some string')
+        result = self.Tokenizer.tokenize('some string')
         self.assertIsInstance(result, list)
         
     def test_list_type_number(self):
         with self.assertRaises(ValueError):
-            self.Tokenizator.tokenize(13)
+            self.Tokenizer.tokenize(13)
             
     def test_list_type_notlist(self):
         with self.assertRaises(ValueError):
-            self.Tokenizator.tokenize([15, 'abc', 'stream'])
+            self.Tokenizer.tokenize([15, 'abc', 'stream'])
+
+    def test_list_result_empty(self):
+        result = self.Tokenizer.tokenize('')
+        self.assertEqual(len(result), 0)
 
     def test_list_result_both_alpha(self):
-        result = self.Tokenizator.tokenize('test !!!111some ,.,. string')
+        result = self.Tokenizer.tokenize('test !!!111some ,.,. string')
         self.assertEqual(len(result), 3)
         self.assertEqual(result[0].string, 'test')
         self.assertEqual(result[0].position, 0)
@@ -27,7 +31,7 @@ class Test(unittest.TestCase):
         self.assertEqual(result[2].position, 21)
         
     def test_list_result_both_notalpha(self):
-        result = self.Tokenizator.tokenize(':)test !!!111some ,.,. string**')
+        result = self.Tokenizer.tokenize(':)test !!!111some ,.,. string**')
         self.assertEqual(len(result), 3)
         self.assertEqual(result[0].string, 'test')
         self.assertEqual(result[0].position, 2)
@@ -35,7 +39,7 @@ class Test(unittest.TestCase):
         self.assertEqual(result[2].position, 23)
         
     def test_list_result_alpha_nonalpha(self):
-        result = self.Tokenizator.tokenize('test !!!111some ,.,. string$^)')
+        result = self.Tokenizer.tokenize('test !!!111some ,.,. string$^)')
         self.assertEqual(len(result), 3)
         self.assertEqual(result[0].string, 'test')
         self.assertEqual(result[0].position, 0)
@@ -43,7 +47,7 @@ class Test(unittest.TestCase):
         self.assertEqual(result[2].position, 21)
         
     def test_list_result_nonalpha_alpha(self):
-        result = self.Tokenizator.tokenize('{test !!!111some ,.,. string')
+        result = self.Tokenizer.tokenize('{test !!!111some ,.,. string')
         self.assertEqual(len(result), 3)
         self.assertEqual(result[0].string, 'test')
         self.assertEqual(result[0].position, 1)
@@ -51,19 +55,24 @@ class Test(unittest.TestCase):
         self.assertEqual(result[2].position, 22)
 
 
-    #unittests for gentokenize method
+    # unittests for gentokenize method
     def test_gen_type_number(self):
         with self.assertRaises(ValueError):
-            result = self.Tokenizator.gentokenize(13)
+            result = self.Tokenizer.gentokenize(13)
             next(result)
             
     def test_gen_type_notlist(self):
         with self.assertRaises(ValueError):
-            result = self.Tokenizator.gentokenize([15, 'abc', 'stream'])
+            result = self.Tokenizer.gentokenize([15, 'abc', 'stream'])
             next(result)
 
+    def test_gen_result_empty(self):
+        result = self.Tokenizer.gentokenize('')
+        resultlist = list(result)
+        self.assertEqual(len(resultlist), 0)
+
     def test_gen_result_both_alpha(self):
-        result = self.Tokenizator.gentokenize('test !!!111some ,.,. string')
+        result = self.Tokenizer.gentokenize('test !!!111some ,.,. string')
         resultlist = list(result)
         self.assertEqual(len(resultlist), 3)
         self.assertEqual(resultlist[0].string, 'test')
@@ -72,7 +81,7 @@ class Test(unittest.TestCase):
         self.assertEqual(resultlist[2].position, 21)
         
     def test_gen_result_both_notalpha(self):
-        result = self.Tokenizator.gentokenize(':)test !!!111some ,.,. string**')
+        result = self.Tokenizer.gentokenize(':)test !!!111some ,.,. string**')
         resultlist = list(result)
         self.assertEqual(len(resultlist), 3)
         self.assertEqual(resultlist[0].string, 'test')
@@ -81,7 +90,7 @@ class Test(unittest.TestCase):
         self.assertEqual(resultlist[2].position, 23)
         
     def test_gen_result_alpha_nonalpha(self):
-        result = self.Tokenizator.gentokenize('test !!!111some ,.,. string$^)')
+        result = self.Tokenizer.gentokenize('test !!!111some ,.,. string$^)')
         resultlist = list(result)
         self.assertEqual(len(resultlist), 3)
         self.assertEqual(resultlist[0].string, 'test')
@@ -90,7 +99,7 @@ class Test(unittest.TestCase):
         self.assertEqual(resultlist[2].position, 21)
         
     def test_gen_result_nonalpha_alpha(self):
-        result = self.Tokenizator.gentokenize('{test !!!111some ,.,. string')
+        result = self.Tokenizer.gentokenize('{test !!!111some ,.,. string')
         resultlist = list(result)
         self.assertEqual(len(resultlist), 3)
         self.assertEqual(resultlist[0].string, 'test')
@@ -98,19 +107,24 @@ class Test(unittest.TestCase):
         self.assertEqual(resultlist[2].string, 'string')
         self.assertEqual(resultlist[2].position, 22)
         
-    #unittests for genclasstokenize method
+    # unittests for genclasstokenize method
     def test_gen_class_type_number(self):
         with self.assertRaises(ValueError):
-            result = self.Tokenizator.genclasstokenize(13)
+            result = self.Tokenizer.genclasstokenize(13)
             next(result)
             
     def test_gen_class_type_notlist(self):
         with self.assertRaises(ValueError):
-            result = self.Tokenizator.genclasstokenize([15, 'abc', 'stream'])
+            result = self.Tokenizer.genclasstokenize([15, 'abc', 'stream'])
             next(result)
 
+    def test_gen_class_result_empty(self):
+        result = self.Tokenizer.genclasstokenize('')
+        resultlist = list(result)
+        self.assertEqual(len(resultlist), 0)
+
     def test_gen_class_result_one(self):
-        result = self.Tokenizator.genclasstokenize('some string')
+        result = self.Tokenizer.genclasstokenize('some string')
         resultlist = list(result)
         self.assertEqual(len(resultlist), 3)
         self.assertEqual(resultlist[0].string, 'some')
@@ -124,7 +138,7 @@ class Test(unittest.TestCase):
         self.assertEqual(resultlist[2].category, "alpha")
 
     def test_gen_class_result_two(self):
-        result = self.Tokenizator.genclasstokenize('!!some bloody string 123**')
+        result = self.Tokenizer.genclasstokenize('!!some bloody string 123**')
         resultlist = list(result)
         self.assertEqual(len(resultlist), 9)
         self.assertEqual(resultlist[0].string, '!!')
@@ -135,7 +149,7 @@ class Test(unittest.TestCase):
         self.assertEqual(resultlist[7].category, "digit")
         
     def test_gen_class_result_three(self):
-        result = self.Tokenizator.genclasstokenize('test™test* *test')
+        result = self.Tokenizer.genclasstokenize('test™test* *test')
         resultlist = list(result)
         self.assertEqual(len(resultlist), 7)
         self.assertEqual(resultlist[1].string, '™')
