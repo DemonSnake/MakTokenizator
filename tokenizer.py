@@ -107,18 +107,19 @@ class Tokenizer(object):
         if not type(stream) is str:
             raise ValueError
 
-        if stream != "":
-            index = -1  # -1 means previous symbol is not alpha
-            for i, char in enumerate(stream):
-                if index > -1 and not char.isalpha():  # end of a word
-                    word = Token(index, stream[index:i])
-                    yield word
-                    index = -1
-                if index == -1 and char.isalpha():  # beginning of a word
-                    index = i
-            if char.isalpha():  # last word in the stream
-                word = Token(index, stream[index:i+1])
+        if stream == "":
+            return
+        index = -1  # -1 means previous symbol is not alpha
+        for i, char in enumerate(stream):
+            if index > -1 and not char.isalpha():  # end of a word
+                word = Token(index, stream[index:i])
                 yield word
+                index = -1
+            if index == -1 and char.isalpha():  # beginning of a word
+                index = i
+        if char.isalpha():  # last word in the stream
+            word = Token(index, stream[index:i+1])
+            yield word
 
     def genclasstokenize(self, stream):
         """
@@ -130,27 +131,30 @@ class Tokenizer(object):
         if not type(stream) is str:
             raise ValueError
 
-        if stream != "":
-            index = 0  # beginning of a token
-            precat = Tokenizer._categorize(stream[0])  # category of the previous token
-            for i, char in enumerate(stream):
-                if Tokenizer._categorize(char) != precat:
-                    word = ClassifiedToken(index, stream[index:i], precat)
-                    index = i
-                    precat = Tokenizer._categorize(char)
-                    yield word
-            word = ClassifiedToken(index, stream[index:i+1], precat)  # last token
-            yield word
+        if stream == "":
+            return
+        index = 0  # beginning of a token
+        precat = Tokenizer._categorize(stream[0])  # category of the previous token
+        for i, char in enumerate(stream[1:len(stream)]):
+            curcat = Tokenizer._categorize(char)
+            if curcat != precat:
+                word = ClassifiedToken(index, stream[index:i+1], precat)
+                index = i + 1
+                precat = curcat
+                yield word
+        word = ClassifiedToken(index, stream[index:i+2], precat)  # last token
+        yield word
 
 if __name__ == '__main__':
-    stream = ""
+    stream = "some string!"
+    #print(stream[1:len(stream)])
     #stream = "   12мама мыла3   раму!!"
     #words = Tokenizer().tokenize(stream)
     #print(words)
     #words = Tokenizer().gentokenize(stream)
     #wordlist = list(words)
     #print(wordlist)
-    #wordclasses = Tokenizer().genclasstokenize(stream)
-    #wordclasseslist = list(wordclasses)
-    #print(wordclasseslist)
+    wordclasses = Tokenizer().genclasstokenize(stream)
+    wordclasseslist = list(wordclasses)
+    print(wordclasseslist)
     #print(Tokenizer._categorize(stream[0]))
