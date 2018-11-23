@@ -1,6 +1,7 @@
 import unittest
 from tokenizer import Tokenizer
 
+
 class Test(unittest.TestCase):
     def setUp(self):
         self.Tokenizer = Tokenizer()
@@ -106,7 +107,8 @@ class Test(unittest.TestCase):
         self.assertEqual(resultlist[0].position, 1)
         self.assertEqual(resultlist[2].string, 'string')
         self.assertEqual(resultlist[2].position, 22)
-        
+
+
     # unittests for genclasstokenize method
     def test_gen_class_type_number(self):
         with self.assertRaises(ValueError):
