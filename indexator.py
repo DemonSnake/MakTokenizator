@@ -1,7 +1,6 @@
 import os
 import shelve
 
-=======
 
 class Indexator(object):
     
