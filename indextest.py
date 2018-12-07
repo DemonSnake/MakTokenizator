@@ -6,7 +6,7 @@ from indexator import Indexator
 
 class Test(unittest.TestCase):
     def setUp(self):
-        self.Indexator = Indexator("MakDatabase")
+        self.Indexator = Indexator("TestDatabase")
 
     #unittests for indexize method
     def test_input_type_number(self):
@@ -26,11 +26,11 @@ class Test(unittest.TestCase):
         files = os.listdir(path=".")
         if os.name == 'nt':
             for file in files:
-                if file.startswith('MakDatabase.'):
+                if file.startswith('TestDatabase.'):
                     flag = True
         else:
             for file in files:
-                if file == 'MakDatabase':
+                if file == 'TestDatabase':
                     flag = True
         self.assertEqual(flag, True)
         dbdict = dict(database)
@@ -89,9 +89,9 @@ class Test(unittest.TestCase):
                 os.remove(file)
             if file == 'secondrun.txt':
                 os.remove(file)
-            if file.startswith('MakDatabase.'):
+            if file.startswith('TestDatabase.'):
                 os.remove(file)
-            if file == 'MakDatabase':
+            if file == 'TestDatabase':
                 os.remove(file)
         
 
