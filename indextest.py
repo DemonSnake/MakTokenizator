@@ -1,6 +1,7 @@
 import unittest
 import os
 import shelve
+import indexator
 from indexator import Indexator
 
 
@@ -33,8 +34,8 @@ class Test(unittest.TestCase):
                 if file == 'TestDatabase':
                     flag = True
         self.assertEqual(flag, True)
-        dbdict = dict(database)
-        expected = {'word':{'test.txt':[Position(0,4)]}}
+        dbdict = dict(self.Indexator.database)
+        expected = {'word':{'test.txt': [indexator.Position(0,4)]}}
         self.assertEqual(dbdict, expected)
 
     def test_result_one_file_many_words(self):
@@ -42,11 +43,11 @@ class Test(unittest.TestCase):
         filename.write('BRP arena is easy')
         filename.close()
         self.Indexator.indexize('test.txt')
-        dbdict = dict(database)
-        expected = {'BRP': {'test.txt': Position(0,3)},
-                    'arena': {'test.txt': Position(4,9)},
-                    'is': {'test.txt': Position(10,12)},
-                    'easy': {'test.txt': Position(13,17)}}
+        dbdict = dict(self.Indexator.database)
+        expected = {'BRP': {'test.txt': [indexator.Position(0,3)]},
+                    'arena': {'test.txt': [indexator.Position(4,9)]},
+                    'is': {'test.txt': [indexator.Position(10,12)]},
+                    'easy': {'test.txt': [indexator.Position(13,17)]}}
         self.assertEqual(dbdict, expected)
 
     def test_result_two_files_one_word(self):
@@ -58,9 +59,9 @@ class Test(unittest.TestCase):
         filename.write('easy')
         filename.close()
         self.Indexator.indexize('secondrun.txt')
-        dbdict = dict(database)
-        expected = {'easy': {'firstrun.txt': Position(0,4), 
-                             'secondrun.txt': Position(0,4)}}
+        dbdict = dict(self.Indexator.database)
+        expected = {'easy': {'firstrun.txt': [indexator.Position(0,4)], 
+                             'secondrun.txt': [indexator.Position(0,4)]}}
         self.assertEqual(dbdict, expected)
 
     def test_result_two_files_many_words(self):
@@ -72,15 +73,20 @@ class Test(unittest.TestCase):
         filename.write('not so easy')
         filename.close()
         self.Indexator.indexize('secondrun.txt')
-        dbdict = dict(database)
-        expected = {'too': {'firstrun.txt': Position(0,3)}, 
-                    'not': {'secondrun.txt': Position(0,3)}, 
-                    'so': {'secondrun.txt': Position(4,6)}, 
-                    'easy': {'firstrun.txt': Position(4,8), 
-                             'secondrun.txt': Position(7,11)}}
+        dbdict = dict(self.Indexator.database)
+        expected = {'too': {'firstrun.txt': [indexator.Position(0,3)]}, 
+                    'not': {'secondrun.txt': [indexator.Position(0,3)]}, 
+                    'so': {'secondrun.txt': [indexator.Position(4,6)]}, 
+                    'easy': {'firstrun.txt': [indexator.Position(4,8)], 
+                             'secondrun.txt': [indexator.Position(7,11)]}}
         self.assertEqual(dbdict, expected)
-
+    
     def tearDown(self):
+        try:
+            self.Indexator.database.close()
+        except Exception:
+            a = 5
+        
         files = os.listdir(path=".")
         for file in files:
             if file == 'test.txt':

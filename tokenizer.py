@@ -45,7 +45,7 @@ class ClassifiedToken(Token):
         
     def __repr__(self):
         """
-        Method for representation an exemplar of the Token class
+        Method for representation an instance of the Token class
         @return: string representation
         """
         return self.string + ' ' + str(self.category) + ' ' + str(self.position)
