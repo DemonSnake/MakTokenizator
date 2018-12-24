@@ -82,11 +82,7 @@ class Test(unittest.TestCase):
         self.assertEqual(dbdict, expected)
     
     def tearDown(self):
-        try:
-            self.Indexator.database.close()
-        except Exception:
-            a = 5
-        
+        self.Indexator.__del__()
         files = os.listdir(path=".")
         for file in files:
             if file == 'test.txt':

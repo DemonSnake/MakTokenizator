@@ -20,10 +20,7 @@ class Indexator(object):
         self.database = shelve.open(filename, writeback=True)
 
     def __del__(self):
-        try:
-            self.database.close()
-        except Exception:
-            return
+        self.database.close()
 
     def relevancyFilter(self, tokens):
         for token in tokens:
@@ -41,11 +38,10 @@ class Indexator(object):
         tokens = Tokenizer().genclasstokenize(stream)
         usefulTokens = self.relevancyFilter(tokens)
         for token in usefulTokens:
-            self.database.setdefault(token.string,
-                                {}).setdefault(filename,
-                                               []).append(Position(token.position,
-                                                                       token.position
-                                                                       + len(token.string)))
+            self.database.setdefault(
+                token.string, {}).setdefault(
+                    filename, []).append(Position(
+                        token.position, token.position + len(token.string)))
         self.database.sync()
         return
 
@@ -65,7 +61,6 @@ class Indexator(object):
 if __name__ == "__main__":
     Indexator._coveredRetreat()
     sIndexator = Indexator("TestDatabase")
-
     filename = open('test.txt', 'w')
     filename.write('BRP arena is easy')
     filename.close()
