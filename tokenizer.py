@@ -53,7 +53,7 @@ class ClassifiedToken(Token):
 
 class Tokenizer(object):
     """
-    Tool for tokenization using methods tokenize or gentokenize
+    Tool for tokenization using methods tokenize/gentokenize/genclasstokenize
     """
     @staticmethod
     def _categorize(sym):
@@ -142,7 +142,8 @@ class Tokenizer(object):
                 index = i + 1
                 precat = curcat
                 yield word
-        word = ClassifiedToken(index, stream[index:i+2], precat)  # last token
+        word = ClassifiedToken(index, stream[index:len(stream)+2], precat)  # last token
+        # word = ClassifiedToken(index, stream[index:i+2], precat)  # last token
         yield word
 
 if __name__ == '__main__':
