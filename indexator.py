@@ -158,4 +158,4 @@ if __name__ == "__main__":
     dbdict = dict(sIndexator.database) """
 
     db = shelve.open('ViMDataBase')
-    print(db['дуб'])
+    print(db['война'])
